@@ -17,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SpringBootApplication
 public class Application implements CommandLineRunner {
-	
-    AWSXRayRecorder xrayRecorder = AWSXRayRecorderBuilder.defaultRecorder();
     
 	public static void main(String[] args) {
 		SpringApplication application = new SpringApplication(Application.class);
@@ -32,6 +30,7 @@ public class Application implements CommandLineRunner {
 				
     	long timeBefore = System.currentTimeMillis();
         
+    	AWSXRayRecorder xrayRecorder = AWSXRayRecorderBuilder.defaultRecorder();
         Subsegment subsegment = xrayRecorder.beginSubsegment("MyCustomSubsegment-01");
 		
         log.debug("run - before sleep");
