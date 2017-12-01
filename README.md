@@ -8,9 +8,6 @@ http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.h
 ### Gradle 4.2 and above
 https://gradle.org/ and set GRADLE_HOME after installation
 
-### Eclipse IDE - For Java Developers 
-Start Eclipse *After* setting both JAVA_HOME, GRADLE_HOME and installing Lombok jar
-
 ## Build project
 
 From the root project directory
