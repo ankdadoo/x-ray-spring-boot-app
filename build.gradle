@@ -1,0 +1,59 @@
+
+
+buildscript {
+	ext {
+		springBootVersion = '1.5.8.RELEASE'
+		springVersion = '4.3.10.RELEASE'
+	}
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.8.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+jar {
+    baseName = 'x-ray-spring-boot-app'
+}
+
+springBoot {
+    executable = true
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+eclipse {
+		project {
+
+		    natures.clear()
+		    natures 'org.eclipse.buildship.core.gradleprojectnature', 'org.eclipse.jdt.core.javanature'
+			  buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
+	  }
+
+	}
+
+dependencies {
+	compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}") 
+    
+  	compile("org.projectlombok:lombok:1.16.18")
+  	
+  	compile 'com.amazonaws:aws-xray-recorder-sdk-core:1.2.0'
+  	compile 'com.amazonaws:aws-xray-recorder-sdk-aws-sdk:1.2.0'
+  	compile 'com.amazonaws:aws-xray-recorder-sdk-aws-sdk-instrumentor:1.2.0'
+  	compile 'com.amazonaws:aws-xray-recorder-sdk-sql-mysql:1.2.0'
+  	
+  	testCompile("junit:junit")
+  	compile ('org.springframework.boot:spring-boot-starter-test')  
+
+}
+
