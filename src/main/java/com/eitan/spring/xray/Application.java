@@ -4,8 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.amazonaws.xray.AWSXRayRecorder;
-import com.amazonaws.xray.AWSXRayRecorderBuilder;
+import com.amazonaws.xray.AWSXRay;
 import com.amazonaws.xray.entities.Subsegment;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,19 +25,38 @@ public class Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		log.debug("run - start");
-				
-    	long timeBefore = System.currentTimeMillis();
-        
-    	AWSXRayRecorder xrayRecorder = AWSXRayRecorderBuilder.defaultRecorder();
-        Subsegment subsegment = xrayRecorder.beginSubsegment("MyCustomSubsegment-01");
+		log.debug("run - start");		
+		AWSXRay.beginSegment("My-Custom-Segment");
 		
-        log.debug("run - before sleep");
-        Thread.sleep(2000);
-        log.debug("run - after sleep");
+    	long timeBefore = System.currentTimeMillis();
+    	
+    	Subsegment subsegment1 = AWSXRay.beginSubsegment("Sleep 1");
+	    try {
+	    	log.debug("run - before sleep 1");
+	        Thread.sleep(2000);
+	        log.debug("run - after sleep 1");
+	    	
+    	} catch ( Exception ex ) {
+    		log.error("run - Error: ", ex);
+    		subsegment1.addException(ex);
+    	} finally {
+    		AWSXRay.endSubsegment();
+    	}
+	    	
+	    Subsegment subsegment2 = AWSXRay.beginSubsegment("Sleep 2");
+	    try {
+	    	log.debug("run - before sleep 2");
+	        Thread.sleep(500);
+	        throw new RuntimeException("My Dummy Error");
+	    	
+    	} catch ( Exception ex ) {
+    		log.error("run - Error: ", ex);
+    		subsegment2.addException(ex);
+    	} finally {
+    		AWSXRay.endSubsegment();
+    	}
         
-        xrayRecorder.endSubsegment();
-        
+    	AWSXRay.endSegment();
         log.debug("run - end - Time Took (ms): {}", (System.currentTimeMillis() - timeBefore));
 	}
 }
